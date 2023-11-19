@@ -1,4 +1,5 @@
 from flask import Flask, render_template, request, session, redirect, url_for
+import os
 import game
 import fetch
 import random
@@ -136,6 +137,7 @@ def practice_post():
     return render_template('practice.html', verb=session['verb'], tense=session['tense'], example_sentence=session['example_sentence'])
 
 if __name__ == '__main__':
-    app.run(debug=False)
+    port = int(os.environ.get('PORT', 5000))  # Use Heroku's PORT environment variable or 5000 if it's not set
+    app.run(host='0.0.0.0', port=port)
 
 #         <a href="{{ url_for('practice', person=session.get('tenserules')[0], number=session.get('tenserules')[1], tense=session.get('tenserules')[2], voice=session.get('tenserules')[3], mood=session.get('tenserules')[4], infinites=session.get('tenserules')[5], case=session.get('tenserules')[6]) }}">Try another verb</a>
