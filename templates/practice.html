@@ -1,0 +1,323 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Practice Conjugating Latin Verbs</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/style.css') }}">
+</head>
+<body class="{{ 'correct-background' if (result|default('')).startswith('Correct!') else 'incorrect-background' if (result|default('')).startswith('Incorrect!') else 'almost-correct-background' if result else '' }}">
+    <!-- Sidebar toggle button -->
+    <div id="sidebar" class="sidebar">
+        <h2>Settings</h2>
+        <!-- Sidebar form for tense settings -->
+        <div class="settings-box">
+            <button class="collapsible">Tense Settings</button>
+            <div class="content-box">
+                <form action="{{ url_for('practice_get') }}" method="get">
+                        <div class="checkbox-group">
+                            <input type="checkbox" id="checkAllTenses" onclick="checkAllTenseSettings(['person', 'number', 'tense', 'voice', 'mood', 'infinites', 'case'], this)">
+                            <label for="checkAllTenses"><b>Check all</b></label>
+                        </div>
+
+                        <!-- Person checkboxes -->
+                        <div class="checkbox-group">
+                            <input type="checkbox" id="person-1" name="person" value="1" {% if '1' in session.get('tenserules')[0] %} checked {% endif %}>
+                            <label for="person-1">1st Person</label>
+                        </div>
+                        <div class="checkbox-group">
+                            <input type="checkbox" id="person-2" name="person" value="2" {% if '2' in session.get('tenserules')[0] %} checked {% endif %}>
+                            <label for="person-1">2nd Person</label>
+                        </div>
+                        <div class="checkbox-group">
+                            <input type="checkbox" id="person-3" name="person" value="3" {% if '3' in session.get('tenserules')[0] %} checked {% endif %}>
+                            <label for="person-3">3rd Person</label>
+                        </div>
+            
+                        <!-- Number checkboxes -->
+                        <div class="checkbox-group">
+                            <input type="checkbox" id="number-s" name="number" value="s" {% if 's' in session.get('tenserules')[1] %} checked {% endif %}>
+                            <label for="number-s">Singular</label>
+                        </div>
+                        <div class="checkbox-group">
+                            <input type="checkbox" id="number-p" name="number" value="p" {% if 'p' in session.get('tenserules')[1] %} checked {% endif %}>
+                            <label for="number-s">Plural</label>
+                        </div>
+            
+                        <!-- Tense checkboxes -->
+                        <div class="checkbox-group">
+                            <input type="checkbox" id="tense-pres" name="tense" value="pres" {% if 'pres' in session.get('tenserules')[2] %} checked {% endif %}>
+                            <label for="tense-pres">Present</label>
+                        </div>
+                        <div class="checkbox-group">
+                            <input type="checkbox" id="tense-impf" name="tense" value="impf" {% if 'impf' in session.get('tenserules')[2] %} checked {% endif %}>
+                            <label for="tense-pres">Imperfect</label>
+                        </div>
+                        <div class="checkbox-group">
+                            <input type="checkbox" id="tense-perf" name="tense" value="perf" {% if 'perf' in session.get('tenserules')[2] %} checked {% endif %}>
+                            <label for="tense-pres">Perfect</label>
+                        </div>
+                        <div class="checkbox-group">
+                            <input type="checkbox" id="tense-fut" name="tense" value="fut" {% if 'fut' in session.get('tenserules')[2] %} checked {% endif %}>
+                            <label for="tense-pres">Future</label>
+                        </div>
+                        <div class="checkbox-group">
+                            <input type="checkbox" id="tense-futp" name="tense" value="futp" {% if 'futp' in session.get('tenserules')[2] %} checked {% endif %}>
+                            <label for="tense-pres">Future perfect</label>
+                        </div>
+                        <div class="checkbox-group">
+                            <input type="checkbox" id="tense-plup" name="tense" value="plup" {% if 'plup' in session.get('tenserules')[2] %} checked {% endif %}>
+                            <label for="tense-pres">Pluperfect</label>
+                        </div>
+            
+                        <!-- Voice checkboxes -->
+                        <div class="checkbox-group">
+                            <input type="checkbox" id="voice-act" name="voice" value="act" {% if 'act' in session.get('tenserules')[3] %} checked {% endif %}>
+                            <label for="voice-act">Active</label>
+                        </div>
+                        <div class="checkbox-group">
+                            <input type="checkbox" id="voice-pass" name="voice" value="pass" {% if 'pass' in session.get('tenserules')[3] %} checked {% endif %}>
+                            <label for="voice-pass">Passive</label>
+                        </div>
+            
+                        <!-- Mood checkboxes -->
+                        <div class="checkbox-group">
+                            <input type="checkbox" id="mood-ind" name="mood" value="ind" {% if 'ind' in session.get('tenserules')[4] %} checked {% endif %}>
+                            <label for="mood-ind">Indicative</label>
+                        </div>
+                        <div class="checkbox-group">
+                            <input type="checkbox" id="mood-sub" name="mood" value="sub" {% if 'sub' in session.get('tenserules')[4] %} checked {% endif %}>
+                            <label for="mood-sub">Subjunctive</label>
+                        </div>
+                        <div class="checkbox-group">
+                            <input type="checkbox" id="mood-imp" name="mood" value="imp" {% if 'imp' in session.get('tenserules')[4] %} checked {% endif %}>
+                            <label for="mood-imp">Imperative</label>
+                        </div>
+            
+                        <!-- Infinitives checkboxes -->
+                        <div class="checkbox-group">
+                            <input type="checkbox" id="infs" name="infinites" value="inf" {% if 'inf' in session.get('tenserules')[5] %} checked {% endif %}>
+                            <label for="inf-pr">Infinitive</label>
+                        </div>
+                        <div class="checkbox-group">
+                            <input type="checkbox" id="part" name="infinites" value="part" {% if 'part' in session.get('tenserules')[5] %} checked {% endif %}>
+                            <label for="inf-pr">Participle</label>
+                        </div>
+                        <div class="checkbox-group">
+                            <input type="checkbox" id="ger" name="infinites" value="ger" {% if 'ger' in session.get('tenserules')[5] %} checked {% endif %}>
+                            <label for="inf-pr">Gerund</label>
+                        </div>
+                        <div class="checkbox-group">
+                            <input type="checkbox" id="sup" name="infinites" value="sup" {% if 'sup' in session.get('tenserules')[5] %} checked {% endif %}>
+                            <label for="inf-pr">Supine</label>
+                        </div>
+                        <input type="submit" value="Update Settings">
+                        <h4>Note: Leaving too few boxes checked, such that no possible conjugations exist, will cause all conjugations to be allowed.</h4>
+                </form>
+            </div>
+        </div>
+
+        <div class="settings-box">
+            <button class="collapsible">Conjugation Settings</button>
+            <div class="content-box">
+                <form action="{{ url_for('practice_get') }}" method="get">
+                        <div class="checkbox-group">
+                            <input type="checkbox" id="checkAllConjugations" onclick="checkAll('conjs', this)">
+                            <label for="checkAllConjugations">Check all</label>
+                        </div>
+                        <!-- Person checkboxes -->
+                        <div class="checkbox-group">
+                            <input type="checkbox" id="firstcon" name="conjs" value="1" {% if '1' in session.get('possible_conjugations') %} checked {% endif %}>
+                            <label for="firstcon">1st Conjugation</label>
+                        </div>
+                        <div class="checkbox-group">
+                            <input type="checkbox" id="secondcon" name="conjs" value="2" {% if '2' in session.get('possible_conjugations') %} checked {% endif %}>
+                            <label for="secondcon">2nd Conjugation</label>
+                        </div>
+                        <div class="checkbox-group">
+                            <input type="checkbox" id="thirdcon" name="conjs" value="3" {% if '3' in session.get('possible_conjugations') %} checked {% endif %}>
+                            <label for="thirdcon">3rd Conjugation</label>
+                        </div>
+                        <div class="checkbox-group">
+                            <input type="checkbox" id="thirdiocon" name="conjs" value="3io" {% if '3io' in session.get('possible_conjugations') %} checked {% endif %}>
+                            <label for="thirdiocon">3rd Conjugation (io)</label>
+                        </div>
+                        <div class="checkbox-group">
+                            <input type="checkbox" id="fourthcon" name="conjs" value="4" {% if '4' in session.get('possible_conjugations') %} checked {% endif %}>
+                            <label for="fourthcon">4th Conjugation</label>
+                        </div>
+                        <div class="checkbox-group">
+                            <input type="checkbox" id="deponent" name="conjs" value="dep" {% if 'dep' in session.get('possible_conjugations') %} checked {% endif %}>
+                            <label for="deponent">Deponent Conjugation</label>
+                        </div>
+                        <div class="checkbox-group">
+                            <input type="checkbox" id="irregular" name="conjs" value="irr" {% if 'irr' in session.get('possible_conjugations') %} checked {% endif %}>
+                            <label for="irregular">Irregular Conjugation</label>
+                        </div>
+                        <div class="checkbox-group">
+                            <input type="checkbox" id="ownverbs" name="conjs" value="own" {% if 'own' in session.get('possible_conjugations') %} checked {% endif %}>
+                            <label for="ownverbs">User-selected verbs</label>
+                        </div>
+                        <input type="submit" value="Update Settings">
+                </form>
+            </div>
+        </div>
+    </div>
+
+    <!-- Use a font-awesome icon for the open button -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.1/css/all.min.css">
+    <div class="openbtn" onclick="toggleNav()"><i class="fas fa-cog"></i></div>
+
+    
+    <div class="content">
+        {% if result %}
+            <p>{{ result }}</p>
+            <form action="{{ url_for('practice_post') }}" method="post">
+                <a href="{{ url_for('practice_get', person=session.get('tenserules')[0], number=session.get('tenserules')[1], tense=session.get('tenserules')[2], voice=session.get('tenserules')[3], mood=session.get('tenserules')[4], infinites=session.get('tenserules')[5], case=session.get('tenserules')[6]) }}" id="tryAnotherVerb">Try another verb</a>
+            </form>
+        {% else %}
+            <h1>Practice Conjugating Latin Verbs</h1>
+            <p>Please conjugate the verb: <strong>{{ verb }}</strong> in the <strong>{{ tense }}</strong> tense.</p>
+            <p>Example sentence: {{ example_sentence }}</p>
+            <div id="hintSection">
+                <a href="javascript:void(0);" id="hintToggle">Hint</a>
+                <p id="hintContent" style="display:none;">
+                    Conjugation: <span id="conjugationType"></span><br>
+                    Meaning: <span id="verbMeaning"></span>
+                </p>
+            </div>
+            <form action="{{ url_for('practice_post') }}" method="post">
+                <input type="text" name="conjugation" id="conjugationInput" autofocus>
+                <div class=""button-container>
+                    <input type="hidden" id="correctConjugation" name="correctConjugation">
+                    <input type="submit" value="Submit", name="submit">
+                </div>
+                <form action="{{ url_for('practice_post') }}" method="post">
+                    <a href="{{ url_for('practice_get', person=session.get('tenserules')[0], number=session.get('tenserules')[1], tense=session.get('tenserules')[2], voice=session.get('tenserules')[3], mood=session.get('tenserules')[4], infinites=session.get('tenserules')[5], case=session.get('tenserules')[6]) }}" id="skip">Skip</a>
+                </form>
+            </form>
+        {% endif %}
+    </div>
+    <script>
+        function checkAll(category, checkAllBox) {
+            console.log("checkAll called")
+            var checkboxes = document.querySelectorAll(`input[name="${category}"]`);
+            checkboxes.forEach((checkbox) => {
+                checkbox.checked = checkAllBox.checked;
+            });
+        }
+    </script>
+    <script>
+       function checkAllTenseSettings(category, checkAllBox) {
+            var audio = new Audio("{{ url_for('static', filename='audio/brp.mp3') }}");
+            audio.volume = 0.1;
+            audio.play();
+            // Iterate over c in category
+            for (var c of category) {
+                var checkboxes = document.querySelectorAll(`input[name="${c}"]`);
+                checkboxes.forEach((checkbox) => {
+                    checkbox.checked = checkAllBox.checked;
+                });
+            }
+        }
+    </script>
+    <script>
+        document.addEventListener('keydown', function(event) {
+            if (event.keyCode === 13) { // Check if the Enter key was pressed
+                var tryAnotherVerbButton = document.getElementById('tryAnotherVerb');
+                if (tryAnotherVerbButton) {
+                    tryAnotherVerbButton.click(); // Trigger the click event on the button
+                }
+            }
+        });
+    </script>
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            var input = document.getElementById('conjugationInput');
+            if (input) {
+                input.addEventListener('keydown', function(e) {
+                    if (e.key === 'Enter') {
+                        console.log('Enter pressed');
+                        e.preventDefault(); // Prevent the default form submission
+                        var tryAnotherVerbButton = document.getElementById('tryAnotherVerb');
+                        if (tryAnotherVerbButton) {
+                            console.log('Try Another Verb button found, clicking.');
+                            tryAnotherVerbButton.click();
+                        } else {
+                            console.log('Try Another Verb button not found, submitting form.');
+                            document.querySelector('[name="submit"]').click();
+                        }
+                    }
+                });
+            } else {
+                ;
+            }
+        });
+
+    </script>
+    <script>
+        document.addEventListener('DOMContentLoaded', function () {
+            var coll = document.getElementsByClassName("collapsible");
+            for (var i = 0; i < coll.length; i++) {
+                coll[i].addEventListener("click", function() {
+                    this.classList.toggle("active");
+                    var content = this.nextElementSibling;
+                    if (content.style.display === "block") {
+                        content.style.display = "none";
+                    } else {
+                        content.style.display = "block";
+                    }
+                });
+            }
+        });
+    </script>
+    
+    <script>
+        function toggleNav() {
+            var sidebar = document.getElementById("sidebar");
+            if (sidebar.style.width === "250px") {
+                sidebar.style.width = "0"; // If sidebar is open, close it
+            } else {
+                sidebar.style.width = "250px"; // If sidebar is closed, open it
+            }
+        }
+
+    </script>
+    <script>
+        document.addEventListener('DOMContentLoaded', (event) => {
+            const verb = '{{ session["verb"] }}';
+            const tense = '{{ session["tense"] }}';
+        
+            fetch(`/get_conjugation?verb=${verb}&tense=${tense}`)
+                .then(response => response.json())
+                .then(data => {
+                    // Store the conjugation in the DOM or a variable
+                    document.getElementById('correctConjugation').value = data.conjugation;
+                });
+        });
+    </script>
+    <script>
+        document.addEventListener('DOMContentLoaded', (event) => {
+            const verb = '{{ session["verb"] }}';
+
+            fetch(`/get_conjugation_type?verb=${verb}`)
+                .then(response => response.json())
+                .then(data => {
+                    document.getElementById('conjugationType').innerText = data.conjugationType;
+                    document.getElementById('verbMeaning').innerText = data.meaning;
+                });
+        });
+
+    </script>
+    <script>
+        document.getElementById('hintToggle').addEventListener('click', function() {
+            var hintContent = document.getElementById('hintContent');
+            if (hintContent.style.display === 'none') {
+                hintContent.style.display = 'block';
+            } else {
+                hintContent.style.display = 'none';
+            }
+        });
+
+    </script>
+</body>
+</html>

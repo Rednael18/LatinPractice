@@ -1,0 +1,220 @@
+body {
+    background-color: #f4f4f4; /* Light grey background */
+    color: #333; /* Darker font color for contrast */
+}
+
+h1 {
+    font-size: 36px; /* Increased size for the title */
+    color: #333;
+    text-align: center; /* Center-align the title */
+    background-color: #f4f4f4; /* Light grey background */
+    padding: 20px; /* Add space around the title */
+    margin-bottom: 0; /* Remove bottom margin for the title */
+
+}
+
+p {
+    font-size: 32px; /* Increased size for the text */
+    line-height: 1.5; /* Increased line-height for readability */
+    text-align: center; /* Center-align the text */
+}
+
+#hintSection {
+    text-align: center;
+    margin-top: 20px;
+}
+
+#hintToggle {
+    cursor: pointer;
+    color: #ffffff; /* Set text color to white */
+    font-weight: bold; /* Make the text bold */
+    font-size: 16px; /* Increase font size for better readability */
+    text-decoration: underline;
+    background-color: #28a745; /* Background color for the button */
+    padding: 10px 20px; /* Padding around the text */
+    border-radius: 5px; /* Rounded corners */
+    display: inline-block; /* To apply padding and background-color */
+}
+
+
+#hintContent {
+    margin-top: 10px;
+}
+
+
+
+a, input[type="submit"] {
+    box-shadow: 0 2px 5px rgba(0, 0, 0, 0.2);
+    transition: all 0.3s;
+    display: inline-block;
+    margin-top: 20px;
+    text-decoration: none;
+    color: #fff;
+    background-color: #28a745; /* Softer green for buttons */
+    padding: 10px 20px; /* Adjust padding for better feel */
+    border-radius: 5px;
+    border: none;
+    font-size: 16px; /* Larger font size for buttons */
+    text-align: center;
+}
+
+
+
+.button-container {
+    text-align: center; /* Center align the contents */
+    padding: 10px 0; /* Add some padding for spacing */
+    display: block; /* Make the container a block element */
+}
+
+a:hover, input[type="submit"]:hover {
+    background-color: #0056b3;
+    transform: scale(1.05); /* Slightly enlarge on hover */
+}
+
+form input[type="text"] {
+    display: block; /* Set display to block to enable auto margins */
+    width: 50%; /* Set a fixed width or percentage */
+    padding: 10px;
+    margin: 20px auto; /* Auto margins for horizontal centering and a bit of space above */
+    font-size: 16px; /* Larger input text */
+    border: 1px solid #ccc; /* Add border to input */
+    border-radius: 4px; /* Rounded corners for input */
+}
+
+
+.correct-background {
+    background-color: #90ee90; /* Lighter green for correctness */
+}
+
+.incorrect-background {
+    background-color: #ffcccb; /* Lighter red for incorrectness */
+}
+
+.almost-correct-background {
+    background-color: #ffffcc; /* Lighter yellow for almost correct */
+}
+
+.correct-background, .incorrect-background {
+    font-size: 20px; /* Increase font size for visibility */
+    padding: 10px;
+    border-radius: 5px;
+    text-align: center; /* Center-align result text */
+    margin-bottom: 20px;
+}
+
+.sidebar {
+    float: right;
+    width: 0; /* Initially set to 0 to hide sidebar */
+    overflow-x: hidden;
+    transition: 0.5s; /* Smooth transition for opening and closing */
+    padding-top: 60px; /* Space for the close button */
+    padding-left: 8px; /* Padding to align close button */
+    position: fixed;
+    top: 0;
+    right: 0;
+    background-color: #e3f2fd; /* Softer color for sidebar */
+    color: #333; /* Darker font color for readability */
+    height: 100vh; /* Full-height sidebar */
+    z-index: 1; /* Ensure sidebar is on top of other content */
+    /* Add border to sidebar */
+    border-left: 1px solid #000;
+
+}
+
+.sidebar a {
+    padding: 8px 8px 8px 32px;
+    text-decoration: none;
+    font-size: 25px;
+    color: #818181;
+    display: block;
+    transition: 0.3s;
+}
+
+.sidebar a:hover {
+    color: #f1f1f1;
+}
+
+.openbtn {
+    background-color: #4CAF50; /* Green button */
+    transition: background-color 0.3s; /* Smooth background color transition */
+    font-size: 20px;
+    cursor: pointer;
+    color: white;
+    border: none;
+    position: fixed;
+    top: 20px;
+    right: 25px;
+    width: 40px;
+    height: 40px;
+    display: block;
+    text-align: center;
+    line-height: 40px;
+    border-radius: 50%;
+    z-index: 2; /* Set z-index to 2 to appear above the content */
+}
+
+.openbtn:hover {
+    background-color: #45a049; /* Darker green on hover */
+}
+
+.content {
+    padding: 20px;
+    padding-right: 100px; /* Add padding to account for the sidebar */
+}
+
+
+.checkbox-group {
+    margin-bottom: 10px;
+}
+
+.checkbox-group input {
+    margin-right: 5px;
+}
+
+.checkbox-group label {
+    font-size: 16px;
+    display: inline-block; /* Align checkboxes and labels */
+    width: 120px; /* Fixed width for alignment */
+}
+
+/* Responsive design adjustments */
+@media screen and (max-width: 768px) {
+    .content, .sidebar {
+        padding-right: 20px; /* Adjust padding for smaller screens */
+    }
+}
+
+/* Collapsible button style */
+.collapsible {
+    background-color: #777;
+    color: white;
+    cursor: pointer;
+    padding: 18px;
+    width: 100%;
+    border: none;
+    text-align: left;
+    outline: none;
+    font-size: 15px;
+    box-shadow: 0 4px 8px 0 rgba(0, 0, 0, 0.2);
+}
+
+/* Add an active class for the collapsible button */
+.active, .collapsible:hover {
+    background-color: #555;
+    /* Increase font size for better readability */
+    font-size: 16px;
+}
+
+/* Style the collapsible content */
+.content-box {
+    padding: 4 18px;
+    display: none;
+    overflow: hidden;
+    background-color: #f1f1f1;
+    /* Add shadows to create the "card" effect */
+    box-shadow: 0 4px 8px 0 rgba(0, 0, 0, 0.2);
+}
+
+.settings-box {
+    margin-bottom: 20px; /* Space between different setting boxes */
+}
