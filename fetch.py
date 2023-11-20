@@ -300,3 +300,37 @@ def get_latin_declension_number(verb):
 
 
 
+#---------------------------------------------
+
+import bz2
+from lxml import etree
+
+def extract_page_html(dump_path, page_title):
+    print("Beginning extraction of page '" + page_title + "' from dump '" + dump_path + "'.")
+    with bz2.open(dump_path, "r") as file:
+        print("File opened.")
+        context = etree.iterparse(file, events=("end",), tag="{http://www.mediawiki.org/xml/export-0.10/}page")
+        print("Context created.")
+        
+        for event, elem in context:
+            print("Event found.")
+            title_elem = elem.find("{http://www.mediawiki.org/xml/export-0.10/}title")
+            if title_elem is not None and title_elem.text == page_title:
+                print("Page found.")
+                revision = elem.find("{http://www.mediawiki.org/xml/export-0.10/}revision")
+                if revision is not None:
+                    print("Revision found.")
+                    text_elem = revision.find("{http://www.mediawiki.org/xml/export-0.10/}text")
+                    if text_elem is not None and text_elem.text is not None:
+                        return text_elem.text
+            elem.clear()
+        return None
+
+# Replace 'enwiktionary-20231101-pages-meta-current.xml.bz2' with your file path
+# Replace 'fumo' with the page title you want to extract
+html_content = extract_page_html('enwiktionary-20231101-pages-meta-current.xml.bz2', 'fumo')
+
+if html_content:
+    print(html_content)
+else:
+    print("Page not found.")

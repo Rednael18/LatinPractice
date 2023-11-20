@@ -1,7 +1,7 @@
 
 import os
 import random
-import fetch
+import extract as fetch
 
 # Get path to current directory
 BASE_PATH = os.path.dirname(os.path.abspath(__file__))

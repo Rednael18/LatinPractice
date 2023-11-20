@@ -1,7 +1,7 @@
 from flask import Flask, render_template, request, session, redirect, url_for
 import os
 import game
-import fetch
+import extract as fetch
 import random
 import verify
 from flask import jsonify
@@ -81,6 +81,7 @@ def practice_get():
         verbs = game.load_verbs()
         vs = game.filter_verbs(verbs, session['possible_conjugations'])
         session['verb'] = game.get_random_verb(vs)
+        print("We got verb " + session['verb'] + ".")
         conjs = fetch.get_conjug(session['verb'])
         filtered_conjs = game.filter_tenses(conjs, tenserules)
         session['tense'] = random.choice(filtered_conjs if filtered_conjs else conjs)
@@ -132,12 +133,16 @@ def practice_post():
     vs = game.filter_verbs(verbs, session['possible_conjugations'])
     session['verb'] = game.get_random_verb(vs)
     conjs = fetch.get_conjug(session['verb'])
+    if len(conjs) == 0:
+        print("WARNING: No conjugations found for verb " + session['verb'] + ".")
+        conjs = ["1|s|pres|act|ind", "2|s|pres|act|ind", "3|s|pres|act|ind", "1|p|pres|act|ind", "2|p|pres|act|ind", "3|p|pres|act|ind"]
     session['tense'] = random.choice(conjs)
     session['example_sentence'] = game.create_example_sentence(session['tense'])
     return render_template('practice.html', verb=session['verb'], tense=session['tense'], example_sentence=session['example_sentence'])
 
 if __name__ == '__main__':
-    port = int(os.environ.get('PORT', 5000))  # Use Heroku's PORT environment variable or 5000 if it's not set
-    app.run(host='0.0.0.0', port=port)
+    app.run(debug=True)
+    #port = int(os.environ.get('PORT', 5000))  # Use Heroku's PORT environment variable or 5000 if it's not set
+    #app.run(host='0.0.0.0', port=port)
 
 #         <a href="{{ url_for('practice', person=session.get('tenserules')[0], number=session.get('tenserules')[1], tense=session.get('tenserules')[2], voice=session.get('tenserules')[3], mood=session.get('tenserules')[4], infinites=session.get('tenserules')[5], case=session.get('tenserules')[6]) }}">Try another verb</a>
