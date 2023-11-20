@@ -324,6 +324,7 @@ def main():
     with open('lat.json', 'w') as file:
         json.dump({'verbs': all_verbs_data}, file, indent=4)
 
+# Add comment for pushing
 
 if __name__ == '__main__':
     main()
