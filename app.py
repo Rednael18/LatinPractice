@@ -84,6 +84,11 @@ def practice_get():
         if not request.args.getlist('person'):
             tenserules[0] = ['']
 
+        if not session.get('displayCustom'):
+            session['displayCustom'] = ""
+        if not session.get('customVerbs'):
+            session['customVerbs'] = []
+
         if session['displayCustom']:
             session['displayCustom'] = session['displayCustom']
         else:
