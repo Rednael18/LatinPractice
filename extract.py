@@ -224,14 +224,12 @@ def demacronize(word):
 
 
 def get_conjug(verb, conj=None, pdf=None, demacronizing=True):
-    print("Currently handling verb " + verb)
     if pdf is None:
         pdf = initialize_data()
     c = pdf[pdf['latin'] == verb]['conjugations']
     if conj is None:
         # Extract keys from all dictionaries in the Series
         a = [key for item in c if isinstance(item, dict) for key in item.keys()]
-        print(a)
         return a
     else:
         # Find the first non-empty dictionary in the Series and access the desired conjugation
@@ -290,7 +288,6 @@ def get_latin_declension_number(latin_word, pd=None):
     if pd==None:
         pd = initialize_data()
     c = pd[pd['latin'] == latin_word]
-    print(c['conjugationType'].iloc[0])
     return str(c['conjugationType'].iloc[0])
 
 
@@ -309,7 +306,6 @@ def main():
 
     start_time = time.time()
     for v in first:
-        print(f"Processing verb '{v.strip()}'")
         current_time = time.time()
         # Stop if more than 10 minutes have passed
         if current_time - start_time > 600:

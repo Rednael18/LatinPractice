@@ -157,6 +157,13 @@
                             <input type="checkbox" id="ownverbs" name="conjs" value="own" {% if 'own' in session.get('possible_conjugations') %} checked {% endif %}>
                             <label for="ownverbs">User-selected verbs</label>
                         </div>
+                        <textarea name="customVerbs" rows="5" placeholder="Enter custom verbs here, one per line.">{{ session.get('displayCustom', '') }}</textarea>
+                         <!-- Warning for invalid verbs -->
+                        {% if session.get('illegalCustomVerbs') %}
+                            <div class="warning-text">
+                                Invalid verbs: {{ session.get('illegalCustomVerbs') | join(', ') }}
+                            </div>
+                        {% endif %}
                         <input type="submit" value="Update Settings">
                 </form>
             </div>

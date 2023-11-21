@@ -4,7 +4,16 @@ import game
 import extract as fetch
 import random
 import verify
+import json
 from flask import jsonify
+
+def load_lat_verbs():
+    with open('lat.json', 'r') as file:
+        data = json.load(file)
+    return [verb['latin'] for verb in data['verbs']]
+
+lat_verbs = load_lat_verbs()
+
 
 app = Flask(__name__)
 app.secret_key = 'wowthiskeyisunguessable' 
@@ -75,11 +84,32 @@ def practice_get():
         if not request.args.getlist('person'):
             tenserules[0] = ['']
 
+        if session['displayCustom']:
+            session['displayCustom'] = session['displayCustom']
+        else:
+            session['displayCustom'] = ""
+        custom_verbs = request.args.get('customVerbs')
+        if custom_verbs:
+            session['customVerbs'] = custom_verbs.splitlines()
+            session['illegalCustomVerbs'] = [v for v in session['customVerbs'] if v.lower() not in lat_verbs]
+            session['displayCustom'] = '\n'.join(session['customVerbs'])
+
         # The rest of your logic for handling a GET request
 
         session['tenserules'] = tenserules
-        verbs = game.load_verbs()
-        vs = game.filter_verbs(verbs, session['possible_conjugations'])
+        if 'own' in session.get('possible_conjugations', []):
+            print("This is what we got: " + str(session.get('customVerbs', [])))
+            print([v.lower() for v in session.get('customVerbs', [])])
+            if [v.lower() for v in session.get('customVerbs', [])][0] in lat_verbs:
+                print("I can confirm that " + [v.lower() for v in session.get('customVerbs', [])][0] + " is in lat_verbs.")
+            vs = [v.lower() for v in session.get('customVerbs', []) if v.lower() in lat_verbs]  # lat_verbs should be loaded from lat.json
+            print("this is vs: " + str(vs))
+            if len(vs) == 0:
+                print("WARNING: No custom verbs left after filtering. Returning all verbs.")
+                vs = lat_verbs
+        else:
+            verbs = game.load_verbs()
+            vs = game.filter_verbs(verbs, session['possible_conjugations'])
         session['verb'] = game.get_random_verb(vs)
         print("We got verb " + session['verb'] + ".")
         conjs = fetch.get_conjug(session['verb'])
@@ -143,5 +173,4 @@ def practice_post():
 if __name__ == '__main__':
     port = int(os.environ.get('PORT', 5000))  # Use Heroku's PORT environment variable or 5000 if it's not set
     app.run(host='0.0.0.0', port=port)
-
-#         <a href="{{ url_for('practice', person=session.get('tenserules')[0], number=session.get('tenserules')[1], tense=session.get('tenserules')[2], voice=session.get('tenserules')[3], mood=session.get('tenserules')[4], infinites=session.get('tenserules')[5], case=session.get('tenserules')[6]) }}">Try another verb</a>
+    #app.run(debug=True)
