@@ -105,10 +105,7 @@ def practice_get():
         if 'own' in session.get('possible_conjugations', []):
             print("This is what we got: " + str(session.get('customVerbs', [])))
             print([v.lower() for v in session.get('customVerbs', [])])
-            if [v.lower() for v in session.get('customVerbs', [])][0] in lat_verbs:
-                print("I can confirm that " + [v.lower() for v in session.get('customVerbs', [])][0] + " is in lat_verbs.")
             vs = [v.lower() for v in session.get('customVerbs', []) if v.lower() in lat_verbs]  # lat_verbs should be loaded from lat.json
-            print("this is vs: " + str(vs))
             if len(vs) == 0:
                 print("WARNING: No custom verbs left after filtering. Returning all verbs.")
                 vs = lat_verbs
